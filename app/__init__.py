@@ -1,0 +1,1 @@
+"""Fermentation RAG Assistant package."""
