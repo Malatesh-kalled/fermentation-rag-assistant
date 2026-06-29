@@ -13,13 +13,13 @@ Loads PDF research papers, chunks and embeds them into ChromaDB, retrieves the m
 - Add fermentation research PDFs to a local folder
 - Ask any technical question about fermentation
 - Get back answers grounded strictly in the research paper content — not hallucinated from general knowledge
-- Accessible via a Streamlit UI or a FastAPI REST endpoint
+- Accessible via a Streamlit UI 
 
 ---
 
 ## Demo
 
-> Live app: [your-app-name.streamlit.app](https://your-app-name.streamlit.app)
+> Live app: [your-app-name.streamlit.app]([https://your-app-name.streamlit.app](https://fermentation-rag-assistant-docucwaw2mtlewzs6sxsi2.streamlit.app/))
 
 ---
 
