@@ -4,7 +4,7 @@ A domain-specific AI application that answers technical questions from fermentat
 
 Loads PDF research papers, chunks and embeds them into ChromaDB, retrieves the most relevant context for a user question, and generates a grounded answer using Groq Llama 3.
 
-![Python](https://img.shields.io/badge/Python-3.8+-blue) ![Streamlit](https://img.shields.io/badge/Streamlit-1.0+-red) ![LangChain](https://img.shields.io/badge/LangChain-enabled-green) ![Groq](https://img.shields.io/badge/Groq-Llama_3-purple)
+
 
 ---
 
