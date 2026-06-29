@@ -19,7 +19,7 @@ Loads PDF research papers, chunks and embeds them into ChromaDB, retrieves the m
 
 ## Demo
 
-> Live app: [your-app-name.streamlit.app]([https://your-app-name.streamlit.app](https://fermentation-rag-assistant-docucwaw2mtlewzs6sxsi2.streamlit.app/))
+> Live app: [your-app-name.streamlit.app](https://fermentation-rag-assistant-docucwaw2mtlewzs6sxsi2.streamlit.app/)
 
 ---
 
