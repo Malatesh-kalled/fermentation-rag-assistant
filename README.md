@@ -1,152 +1,145 @@
 # Fermentation RAG Assistant
 
-Fermentation RAG Assistant is a domain-specific Generative AI application that answers technical questions from fermentation research papers using Retrieval-Augmented Generation (RAG).
+A domain-specific AI application that answers technical questions from fermentation research papers using Retrieval-Augmented Generation (RAG).
 
-The system loads pre-added PDF research papers, splits them into chunks, creates embeddings, stores them in ChromaDB, retrieves the most relevant context for a user question, and generates a grounded answer using Groq Llama 3.
+Loads PDF research papers, chunks and embeds them into ChromaDB, retrieves the most relevant context for a user question, and generates a grounded answer using Groq Llama 3.
 
-## Features
+![Python](https://img.shields.io/badge/Python-3.8+-blue) ![Streamlit](https://img.shields.io/badge/Streamlit-1.0+-red) ![LangChain](https://img.shields.io/badge/LangChain-enabled-green) ![Groq](https://img.shields.io/badge/Groq-Llama_3-purple)
 
-- PDF-based knowledge base for fermentation research papers
-- Automatic document loading and text chunking
-- Semantic embeddings using `sentence-transformers/all-MiniLM-L6-v2`
-- ChromaDB vector database for similarity search
-- Groq Llama 3 integration for fast answer generation
-- Streamlit web interface for easy interaction
-- FastAPI backend for REST API access
-- Prompt design to reduce hallucinations by forcing answers to use retrieved context
+---
 
-## Tech Stack
+## What it does
 
-- Python
-- Streamlit
-- FastAPI
-- LangChain
-- ChromaDB
-- SentenceTransformers
-- Groq Llama 3
-- Pydantic
+- Add fermentation research PDFs to a local folder
+- Ask any technical question about fermentation
+- Get back answers grounded strictly in the research paper content — not hallucinated from general knowledge
+- Accessible via a Streamlit UI or a FastAPI REST endpoint
 
-## Project Structure
+---
 
-```text
+## Demo
+
+> Live app: [your-app-name.streamlit.app](https://your-app-name.streamlit.app)
+
+---
+
+## Tech stack
+
+| Layer | Technology |
+|---|---|
+| UI | Streamlit |
+| Backend API | FastAPI |
+| LLM | Groq Llama 3 (llama-3.1-8b-instant) |
+| Embeddings | sentence-transformers/all-MiniLM-L6-v2 |
+| Vector Database | ChromaDB |
+| Orchestration | LangChain |
+| Language | Python 3.8+ |
+
+---
+
+## How it works
+
+1. Research paper PDFs are placed inside `data/papers/`
+2. LangChain loads and splits documents into chunks using recursive text splitting
+3. Each chunk is embedded using SentenceTransformers and stored in ChromaDB
+4. When a user asks a question, it is converted to an embedding
+5. ChromaDB retrieves the most semantically similar chunks
+6. The retrieved context and question are sent to Groq Llama 3
+7. The model returns an answer grounded in the research paper content — if the answer isn't in the papers, it says so
+
+---
+
+## Project structure
+
+```
 fermentation-rag-assistant/
-  app/
-    api.py              # FastAPI endpoints
-    config.py           # App configuration and environment variables
-    ingestion.py        # PDF loading, chunking, embedding, and indexing
-    prompts.py          # RAG prompt templates
-    rag.py              # Retrieval and answer generation logic
-    streamlit_app.py    # Streamlit frontend
-  data/
-    papers/             # Place fermentation research PDFs here
-  vector_store/         # Generated ChromaDB vector store
-  .env.example          # Example environment variables
-  requirements.txt      # Python dependencies
-  README.md
+├── app/
+│   ├── api.py              # FastAPI endpoints
+│   ├── config.py           # App configuration and environment variables
+│   ├── ingestion.py        # PDF loading, chunking, embedding, and indexing
+│   ├── prompts.py          # RAG prompt templates
+│   ├── rag.py              # Retrieval and answer generation logic
+│   └── streamlit_app.py    # Streamlit frontend
+├── data/
+│   └── papers/             # Place fermentation research PDFs here
+├── vector_store/           # Generated ChromaDB vector store (local only)
+├── .env.example            # Template — copy to .env and add your key
+├── requirements.txt        # Python dependencies
+└── README.md
 ```
 
-## How It Works
+---
 
-1. Research paper PDFs are placed inside `data/papers/`.
-2. LangChain loads the PDF documents.
-3. Documents are split into smaller chunks using recursive text splitting.
-4. Each chunk is converted into an embedding using SentenceTransformers.
-5. Embeddings and chunk text are stored in ChromaDB.
-6. When a user asks a question, the question is converted into an embedding.
-7. ChromaDB retrieves the most relevant chunks.
-8. The retrieved context and question are sent to Groq Llama 3.
-9. The model returns an answer grounded in the research paper content.
+## Local setup
 
-## Setup Instructions
-
-### 1. Clone the Repository
-
+**1. Clone the repo**
 ```bash
 git clone https://github.com/Malatesh-Kalled/fermentation-rag-assistant.git
 cd fermentation-rag-assistant
 ```
 
-### 2. Create a Virtual Environment
-
+**2. Create and activate a virtual environment**
 ```bash
 python -m venv .venv
+.venv\Scripts\activate        # Windows
+source .venv/bin/activate     # Mac/Linux
 ```
 
-Activate it on Windows:
-
-```bash
-.venv\Scripts\activate
-```
-
-### 3. Install Dependencies
-
+**3. Install dependencies**
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Create Environment File
+**4. Add your Groq API key**
+
+Get a free key at [console.groq.com](https://console.groq.com).
 
 ```bash
 copy .env.example .env
 ```
 
-Open `.env` and add your Groq API key:
-
-```env
+Open `.env` and fill in:
+```
 GROQ_API_KEY=your_groq_api_key_here
 GROQ_MODEL=llama-3.1-8b-instant
 ```
 
-Do not upload your `.env` file to GitHub.
+> `.env` is listed in `.gitignore` — it will never be committed to GitHub.
 
-### 5. Add Research Papers
+**5. Add research papers**
 
-Place fermentation research paper PDFs in:
-
-```text
-data/papers/
+Place fermentation PDF papers in `data/papers/`:
 ```
-
-Example:
-
-```text
 data/papers/lactic_acid_fermentation.pdf
 data/papers/beer_fermentation_optimization.pdf
 ```
 
-### 6. Build the Vector Database
-
+**6. Build the vector database**
 ```bash
 python -m app.ingestion
 ```
 
-This creates a local ChromaDB vector store inside `vector_store/`.
+Creates a local ChromaDB vector store in `vector_store/`. Re-run this whenever you add new papers.
 
-## Run the Streamlit App
+---
 
+## Run the app
+
+**Streamlit UI**
 ```bash
 streamlit run app/streamlit_app.py
 ```
+Opens at `http://localhost:8501`
 
-Then open the local URL shown in the terminal, usually:
-
-```text
-http://localhost:8501
-```
-
-## Run the FastAPI Backend
-
+**FastAPI backend**
 ```bash
 uvicorn app.api:app --reload
 ```
+API docs at `http://127.0.0.1:8000/docs`
 
-Open the API documentation:
+---
 
-```text
-http://127.0.0.1:8000/docs
-```
-
-## Example Questions
+## Example questions
 
 - What factors affect fermentation yield?
 - How does temperature influence fermentation?
@@ -154,26 +147,33 @@ http://127.0.0.1:8000/docs
 - How can fermentation conditions be optimized?
 - What are common challenges in lactic acid fermentation?
 
-## API Example
+---
+
+## API example
 
 ```bash
-curl -X POST http://127.0.0.1:8000/ask ^
-  -H "Content-Type: application/json" ^
+curl -X POST http://127.0.0.1:8000/ask \
+  -H "Content-Type: application/json" \
   -d "{\"question\":\"What factors affect fermentation yield?\"}"
 ```
 
-## Hallucination Control
+---
 
-The assistant is instructed to answer only using the retrieved research paper context. If the answer is not available in the provided context, it responds that it does not know based on the available research papers.
+## Hallucination control
+
+The prompt explicitly instructs the model to answer only using the retrieved research paper context. If the answer is not available in the provided chunks, it responds that it does not know based on the available papers — it does not fall back to general knowledge.
+
+---
 
 ## Notes
 
-- Add only open-access or legally usable PDFs to `data/papers/`.
-- Keep `.env` private because it contains the Groq API key.
-- The `vector_store/` folder is generated locally and does not need to be uploaded to GitHub.
+- Only add open-access or legally usable PDFs to `data/papers/`
+- `vector_store/` is generated locally and does not need to be pushed to GitHub
+- Keep `.env` private — it contains your Groq API key
+
+---
 
 ## Author
 
 **Malatesh M Kalled**
-
-AI/ML and Generative AI enthusiast with hands-on experience in RAG pipelines, FastAPI, LangChain, vector databases, and LLM-powered applications.
+[linkedin.com/in/malatesh-kalled](https://www.linkedin.com/in/malatesh-kalled) · [github.com/malateshkalled](https://github.com/malateshkalled)
